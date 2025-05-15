@@ -39,7 +39,7 @@ def download_file(filename, name, award):
     canvas.rectangle([(x_padding, 600-(y_buffer+y_offset)),
                       (600-x_padding, 600-(y_buffer+y_size))], fill='white')
 
-
+    # award text
     canvas.text((x_padding+20, 600-(y_buffer+y_offset-5)), name, font_size=25, fill='black')
     canvas.text((x_padding+200, 600-(y_buffer+y_offset-5)), award, font_size=25, fill='black')
     canvas.text((x_padding+400, 600-(y_buffer+y_offset-5)), str(date.today()), font_size=25, fill='black')
