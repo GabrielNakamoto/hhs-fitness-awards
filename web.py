@@ -1,7 +1,7 @@
 import os
 from datetime import date
 from PIL import Image, ImageOps, ImageDraw
-from flask import Flask, request, redirect, flash, url_for
+from flask import Flask, request, redirect, flash, url_for, send_from_directory
 from werkzeug.utils import secure_filename
     
 app = Flask(__name__)
@@ -15,7 +15,7 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in FILETYPES
 
-@app.route('/uploads/<filename>/<name>/<award>')
+@app.route('/uploads/<filename>/<name>/<award>', methods=['GET', 'POST'])
 def download_file(filename, name, award):
     # process image
     im = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -47,10 +47,16 @@ def download_file(filename, name, award):
     filename = filename.rsplit('.',1)[0] + '-processed.' + filename.rsplit('.',1)[1]
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
+    if request.method == 'POST':
+        if 'download' in request.form:
+            return send_from_directory(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER']), filename)
+
     im.save(filepath)
     return f'''<h1>Heres your award image</h1>
         <img src="{url_for('static', filename='images/'+filename)}"><br>
-        <button>Download Award Image</button>
+        <form method="POST">
+            <button type="submit" name="download">Download Award Image</button>
+        </form>
         '''
 
 @app.route("/", methods=['GET', 'POST'])
