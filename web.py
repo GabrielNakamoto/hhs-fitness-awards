@@ -52,11 +52,14 @@ def download_file(filename, name, award):
             return send_from_directory(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER']), filename)
 
     im.save(filepath)
-    return f'''<h1>Heres your award image</h1>
-        <img src="{url_for('static', filename='images/'+filename)}"><br>
-        <form method="POST">
-            <button type="submit" name="download">Download Award Image</button>
-        </form>
+    return f'''
+        <center>
+            <h1>Heres your award image</h1>
+            <img src="{url_for('static', filename='images/'+filename)}"><br>
+            <form method="POST">
+                <button type="submit" name="download">Download Award Image</button>
+            </form>
+        </center>
         '''
 
 @app.route("/", methods=['GET', 'POST'])
@@ -79,12 +82,14 @@ def run():
 
     return '''
     <!doctype html>
-    <title>Award Generator</title>
-    <h1>Upload an image</h1>
-    <form method=post enctype=multipart/form-data>
-        <input type=file name=image><br>
-        <input type=text name=name placeholder='name'><br>
-        <input type=text name=award placeholder='award'><br>
-        <input type=submit value=Upload>
-    </form>
+    <center>
+        <title>Award Generator</title>
+        <h1>Upload an image</h1>
+        <form method=post enctype=multipart/form-data>
+            <input type=file name=image><br>
+            <input type=text name=name placeholder='name'><br>
+            <input type=text name=award placeholder='award'><br>
+            <input type=submit value=Upload>
+        </form>
+    </center>
     '''
