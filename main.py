@@ -102,6 +102,7 @@ def run():
     <center>
         <title>Award Generator</title>
         <h1>Upload an image</h1>
+		<h3>Let me know if you encounter any issues, at <a href="mailto:gabriel@nakamoto.ca">gabriel@nakamoto.ca</a></h3>
         <form method=post enctype=multipart/form-data>
             <input type=file name=image><br>
             <input type=text name=name placeholder='name'><br>
