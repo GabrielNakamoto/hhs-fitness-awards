@@ -14,33 +14,60 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in FILETYPES
 
-def format_image(filename, new_filepath, name, award, date, dims=600):
+def format_image(filename, new_filepath, name, award, date):
+	width, height = (600, 500)
+
 	im = Image.open(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	im = ImageOps.exif_transpose(im)
-	im = ImageOps.fit(im, (dims, dims))
+	im = ImageOps.fit(im, (width, height))
 
-	canvas = ImageDraw.Draw(im)
+	draw = ImageDraw.Draw(im)
 
-	x_padding = 20
-	y_buffer = 30
-	y_size = 10
-	y_offset = 50
+	x_pad, y_pad = (20, 30)
+	r_thickness = 10
+	r_offset = 50
+	t_pad = (r_offset / 2) + 11
 
-    # bottom black 
-	canvas.rectangle([(x_padding, dims-(y_buffer+y_size)),
-                      (dims-x_padding, dims-y_buffer)], fill='black')
-    # top black
-	canvas.rectangle([(x_padding, dims-(y_buffer+y_size+y_offset)),
-                      (dims-x_padding, dims-(y_buffer+y_offset))], fill='black')
+	name_delta = 10
+	award_delta = int(width * 0.33) + name_delta
+	date_delta = int(width * 0.66) + name_delta
 
-    # middle white
-	canvas.rectangle([(x_padding, dims-(y_buffer+y_offset)),
-                      (dims-x_padding, dims-(y_buffer+y_size))], fill='white')
+	draw.rectangle([
+		x_pad,
+		height - y_pad - r_thickness,
+		width - x_pad,
+		height - y_pad
+	], fill='black')
 
-    # award text
-	canvas.text((x_padding+5, dims-(y_buffer+y_offset-5)), name, font_size=22, fill='black')
-	canvas.text((x_padding+200, dims-(y_buffer+y_offset-5)), award, font_size=22, fill='black')
-	canvas.text((x_padding+410, dims-(y_buffer+y_offset-5)), date, font_size=22, fill='black')
+	draw.rectangle([
+		x_pad,
+		height - y_pad - r_offset - r_thickness,
+		width - x_pad,
+		height - y_pad - r_offset
+	], fill='black')
+
+	draw.rectangle([
+		x_pad,
+		height - y_pad - r_offset,
+		width - x_pad,
+		height - y_pad - r_thickness
+	], fill='white')
+
+	draw.text((x_pad + name_delta, height - y_pad - r_thickness - t_pad),
+		name,
+		font_size=22,
+		fill='black'
+	)
+	draw.text((x_pad + award_delta, height - y_pad - r_thickness - t_pad),
+		award,
+		font_size=22,
+		fill='black'
+	)
+	draw.text((x_pad + date_delta, height - y_pad - r_thickness - t_pad),
+		date,
+		font_size=22,
+		fill='black'
+	)
 
 	im.save(new_filepath)
 
